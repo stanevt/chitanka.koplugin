@@ -70,6 +70,16 @@ function Chitanka:getSettingsMenu()
             keep_menu_open = true,
         }
     end
+    local perpage_menu = {}
+    for _, n in ipairs({ 5, 10, 15, 20, 25 }) do
+        perpage_menu[#perpage_menu + 1] = {
+            text = tostring(n),
+            radio = true,
+            checked_func = function() return Config:get("results_per_page") == n end,
+            callback = function() Config:set("results_per_page", n) end,
+            keep_menu_open = true,
+        }
+    end
     return {
         {
             text = _("Формат по подразбиране"),
@@ -80,6 +90,10 @@ function Chitanka:getSettingsMenu()
             checked_func = function() return Config:get("confirm_format_each_time") end,
             callback = function() Config:toggle("confirm_format_each_time") end,
             keep_menu_open = true,
+        },
+        {
+            text = _("Резултати на страница"),
+            sub_item_table = perpage_menu,
         },
         {
             text = _("Папка за сваляне"),

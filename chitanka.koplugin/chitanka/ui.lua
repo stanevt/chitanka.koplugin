@@ -90,6 +90,7 @@ function UI:showResults(items, title)
         item_table     = menu_items,
         is_borderless  = true,
         is_popout      = false,
+        perpage        = Config:get("results_per_page"),
         width          = Screen:getWidth(),
         height         = Screen:getHeight(),
         onMenuSelect   = function(_self, it)

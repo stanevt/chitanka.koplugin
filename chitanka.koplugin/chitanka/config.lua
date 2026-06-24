@@ -17,6 +17,7 @@ local DEFAULTS = {
     default_format = "epub",          -- epub / fb2.zip / mobi / pdf / txt.zip
     last_search_type = "all",         -- all / books / texts / persons
     confirm_format_each_time = true,  -- ако е false: сваляме директно в default_format
+    results_per_page = 10,            -- брой резултати на страница в списъка
 }
 
 local function getSettings()
