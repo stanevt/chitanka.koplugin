@@ -51,6 +51,12 @@ end
 function CoverMenu:_recalculateDimen()
     Menu._recalculateDimen(self)
     if not self.item_dimen then return end
+    -- Menu._recalculateDimen overwrites self.perpage; re-apply the user's choice.
+    if self.desired_perpage and self.desired_perpage > 0 and self.perpage > 0 then
+        local items_h = self.perpage * self.item_dimen.h
+        self.perpage = self.desired_perpage
+        self.item_dimen.h = math.floor(items_h / self.desired_perpage)
+    end
     self.cover_h = self.item_dimen.h - 2 * Size.padding.small
     self.cover_w = math.floor(self.cover_h * 2 / 3)
     self.state_w = self.cover_w + 2 * Size.padding.small
