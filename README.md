@@ -1,6 +1,6 @@
 # chitanka.koplugin
 
-A [KOReader](https://koreader.rocks/) plugin for searching and downloading books from [chitanka.info](https://chitanka.info) -- the largest free Bulgarian-language digital library, known as "Моята библиотека" (My Library).
+A [KOReader](https://koreader.rocks/) plugin for searching and downloading books from [chitanka.info](https://chitanka.info) -- the largest free Bulgarian-language digital library.
 
 No account or login is required. The plugin uses only chitanka.info's public XML API and direct download links.
 
