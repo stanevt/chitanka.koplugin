@@ -22,6 +22,7 @@ local Menu = require("ui/widget/menu")
 local Size = require("ui/size")
 local TextBoxWidget = require("ui/widget/textboxwidget")
 local UIManager = require("ui/uimanager")
+local Widget = require("ui/widget/widget")
 local ffiUtil = require("ffi/util")
 local lfs = require("libs/libkoreader-lfs")
 local logger = require("logger")
@@ -103,10 +104,11 @@ function CoverMenu:_placeholder(has_border)
             },
         }
     else
-        return CenterContainer:new{
-            dimen = Geom:new{ w = w, h = h },
-            FrameContainer:new{
-                width = w, height = h, bordersize = 0, padding = 0, margin = 0,
+        -- Празен контейнер с точни размери
+        return FrameContainer:new{
+            width = w, height = h, bordersize = 0, padding = 0, margin = 0,
+            Widget:new{
+                dimen = Geom:new{ w = w, h = h },
             },
         }
     end

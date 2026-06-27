@@ -80,6 +80,22 @@ function Chitanka:getSettingsMenu()
             keep_menu_open = true,
         }
     end
+	local name_pattern_menu = {
+        {
+            text = _("Автор - Заглавие"),
+            radio = true,
+            checked_func = function() return Config:get("download_name_pattern") == "author_title" end,
+            callback = function() Config:set("download_name_pattern", "author_title") end,
+            keep_menu_open = true,
+        },
+        {
+            text = _("Заглавие - Автор"),
+            radio = true,
+            checked_func = function() return Config:get("download_name_pattern") == "title_author" end,
+            callback = function() Config:set("download_name_pattern", "title_author") end,
+            keep_menu_open = true,
+        },
+	}
     return {
         {
             text = _("Формат по подразбиране"),
@@ -99,6 +115,10 @@ function Chitanka:getSettingsMenu()
             text = _("Папка за сваляне"),
             callback = function() self:chooseDownloadDir() end,
             keep_menu_open = true,
+        },
+		{
+            text = _("Име на сваления файл"),
+            sub_item_table = name_pattern_menu,
         },
     }
 end
