@@ -14,10 +14,11 @@ local Config = {}
 local settings -- мързеливо създаван LuaSettings обект
 
 local DEFAULTS = {
-    default_format = "epub",          -- epub / fb2.zip / mobi / pdf / txt.zip
-    last_search_type = "all",         -- all / books / texts / persons
-    confirm_format_each_time = true,  -- ако е false: сваляме директно в default_format
-    results_per_page = 10,            -- брой резултати на страница в списъка
+    default_format = "epub",                  -- epub / fb2.zip / mobi / pdf / txt.zip
+    last_search_type = "all",                 -- all / books / texts / persons
+    confirm_format_each_time = true,          -- ако е false: сваляме директно в default_format
+    results_per_page = 10,                    -- брой резултати на страница в списъка
+	download_name_pattern = "author_title",   -- "author_title" или "title_author"
 }
 
 local function getSettings()
@@ -67,6 +68,60 @@ end
 
 function Config:setDownloadDir(dir)
     self:set("download_dir", dir)
+end
+
+function Config:getDownloadName(item)
+    local pattern = self:get("download_name_pattern") or "title_author"
+    local parts = {}
+    if item.title and item.title ~= "" then
+        parts[#parts + 1] = item.title
+    end
+    if item.author and item.author ~= "" then
+        parts[#parts + 1] = item.author
+    end
+
+    local name
+    if #parts == 2 then
+        if pattern == "author_title" then
+            name = parts[2] .. " - " .. parts[1]
+        else
+            name = table.concat(parts, " - ")
+        end
+    elseif #parts == 1 then
+        name = parts[1]
+    else
+        name = item.slug or tostring(item.id)
+    end
+
+    -- Таблица с интелигентни замени
+    local smart_replacements = {
+        [":"]  = " -",
+        ["/"]  = " - ",
+        ["\\"] = " - ",
+        ["?"]  = "",
+        ["!"]  = "",
+        ["*"]  = "",
+        ["<"]  = "",
+        [">"]  = "",
+        ["|"]  = "",
+        ['"']  = "",
+    }
+    name = name:gsub("[:/\\?%!%*<>|\"]", smart_replacements)
+
+    -- Премахване на всякакви оставащи символи, забранени от файловата система (за всеки случай)
+    name = name:gsub("[<>:\"/\\|?*]", "_")
+
+    -- Почистване на интервали и тирета
+    name = name:gsub("%s+", " ")
+               :gsub("^%s*%-%s*", "")
+               :gsub("%s*%-%s*$", "")
+               :gsub("%s*%-%s*", " - ")
+
+    if name == "" then
+        name = item.slug or tostring(item.id)
+    end
+
+    return name
 end
 
 return Config
