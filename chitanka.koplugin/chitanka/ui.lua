@@ -13,6 +13,7 @@ local InputDialog = require("ui/widget/inputdialog")
 local CoverMenu = require("chitanka/menu")
 local NetworkMgr = require("ui/network/manager")
 local UIManager = require("ui/uimanager")
+local lfs = require("libs/libkoreader-lfs")
 local _ = require("gettext")
 local Screen = Device.screen
 
@@ -235,6 +236,22 @@ function UI:download(item, fmt)
             self:showError(err)
             return
         end
+
+        -- Сглобяваме четливо име според настройката
+        local base_name = Config:getDownloadName(item)
+        local new_path = dir .. "/" .. base_name .. "." .. fmt
+
+        if path ~= new_path then
+            local final_path = new_path
+            local counter = 1
+            while lfs.attributes(final_path, "mode") == "file" do
+                final_path = dir .. "/" .. base_name .. " (" .. counter .. ")." .. fmt
+                counter = counter + 1
+            end
+            local ok = os.rename(path, final_path)
+            if ok then path = final_path end
+        end
+
         UIManager:show(ConfirmBox:new{
             text = string.format(_("Свалено:\n%s\n\nОтваряне?"), path),
             ok_text = _("Отвори"),
